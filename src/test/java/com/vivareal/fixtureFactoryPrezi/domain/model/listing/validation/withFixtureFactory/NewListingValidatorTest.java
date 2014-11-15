@@ -1,21 +1,25 @@
-package com.vivareal.fixtureFactoryPrezi.domain.model.listing.validation.withoutFixtureFactory;
+package com.vivareal.fixtureFactoryPrezi.domain.model.listing.validation.withFixtureFactory;
 
 import static junit.framework.Assert.assertTrue;
 
-import java.util.Date;
-
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import br.com.six2six.fixturefactory.Fixture;
+import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
+
 import com.vivareal.fixtureFactoryPrezi.domain.model.listing.Listing;
-import com.vivareal.fixtureFactoryPrezi.domain.model.listing.address.Address;
-import com.vivareal.fixtureFactoryPrezi.domain.model.listing.address.State;
 import com.vivareal.fixtureFactoryPrezi.domain.model.listing.validation.NewListingValidator;
-import com.vivareal.fixtureFactoryPrezi.domain.model.publisher.Publisher;
 
 public class NewListingValidatorTest {
 
 	private NewListingValidator newListingValidator;
+	
+	@BeforeClass
+	public static void setUpClass() {
+		FixtureFactoryLoader.loadTemplates("com.vivareal.fixtureFactoryPrezi.infrastructure.fixture");
+	}
 	
 	@Before
 	public void setUp() {
@@ -24,9 +28,7 @@ public class NewListingValidatorTest {
 	
 	@Test
 	public void listingsFromMinasGeraisShouldNotBeAllowed() {
-		Publisher publisher = new Publisher(1l, "Imobiliária do Nykolas", new Date());
-		Address address = new Address(State.MG, "Minas Gerais", "Rua Xpto", "99999-999");
-		Listing listing = new Listing(1l, "Imóvel de Minas gerais", publisher, address, new Date());
+		Listing listing = Fixture.from(Listing.class).gimme("fromMinasGerais");
 		
 		newListingValidator.validate(listing);
 		
